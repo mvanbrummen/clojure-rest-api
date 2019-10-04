@@ -2,7 +2,9 @@
   (:require [ragtime.jdbc :as jdbc]
             [ragtime.repl :as repl]))
 
-(def db-spec {:subprotocol "postgresql"
+(def db-spec {
+              :dbtype "postgresql"
+              :subprotocol "postgresql"
               :subname "//localhost:5432/postgres"
               :user "postgres"
               :password "password"})
