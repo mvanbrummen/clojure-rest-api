@@ -8,15 +8,13 @@
 
 (s/defschema Snippet
   {
-   :id          s/Int
-   :title       s/Str
-   :content     s/Str
-   :file_name   s/Str
-   :create_date s/Str
+   :title     s/Str
+   :content   s/Str
+   :file_name s/Str
    }
   )
 
-(def db-connection (jdbc/get-datasource db-config/db-spec))
+(def ds (jdbc/get-datasource db-config/db-spec))
 
 (def app
   (api
@@ -35,12 +33,18 @@
             }
      }
 
+    (POST "/snippets" []
+      :body [snippet Snippet]
+      :summary "Creates a snippet"
+      (ok (repository/create-snippet ds snippet))
+      )
+
     (GET "/snippets" []
       :summary "Returns all snippets"
-      (ok (repository/snippets db-connection)))
+      (ok (repository/snippets ds)))
 
     (GET "/snippets/:id" []
       :summary "Returns a snippet for an ID"
       :path-params [id :- s/Int]
-      (ok (repository/snippet db-connection id))
+      (ok (repository/snippet ds id))
       )))

@@ -1,2 +1,2 @@
-{:up ["INSERT INTO snippet (title, content, file_name, created_date) VALUES ('Hello world', '(println \"Hello, World!\")', 'core.clj', now());"]
+{:up ["INSERT INTO snippet (title, content, file_name) VALUES ('Hello world', '(println \"Hello, World!\")', 'core.clj');"]
  :down ["DELETE FROM snippet;"]}
