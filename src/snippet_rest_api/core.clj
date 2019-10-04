@@ -4,7 +4,8 @@
             [next.jdbc :as jdbc]
             [snippet-rest-api.db :as db-config]
             [snippet-rest-api.repository :as repository]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [ring.middleware.cors :refer [wrap-cors]]))
 
 (s/defschema Snippet
   {
@@ -17,34 +18,37 @@
 (def ds (jdbc/get-datasource db-config/db-spec))
 
 (def app
-  (api
-    :swagger
-    {
-     :ui   "/"
-     :spec "/swagger.json"
-     :data {
-            :info     {
-                       :title       "Snippet API"
-                       :description "API for code snippets"
+  (wrap-cors (api
+               :swagger
+               {
+                :ui   "/"
+                :spec "/swagger.json"
+                :data {
+                       :info     {
+                                  :title       "Snippet API"
+                                  :description "API for code snippets"
+                                  }
+                       :tags     [{:name "api" :description "some apis"}]
+                       :produces ["application/json"]
+                       :consumes ["application/json"]
                        }
-            :tags     [{:name "api" :description "some apis"}]
-            :produces ["application/json"]
-            :consumes ["application/json"]
-            }
-     }
+                }
 
-    (POST "/snippets" []
-      :body [snippet Snippet]
-      :summary "Creates a snippet"
-      (ok (repository/create-snippet ds snippet))
-      )
+               (POST "/snippets" []
+                 :body [snippet Snippet]
+                 :summary "Creates a snippet"
+                 (ok (repository/create-snippet ds snippet))
+                 )
 
-    (GET "/snippets" []
-      :summary "Returns all snippets"
-      (ok (repository/snippets ds)))
+               (GET "/snippets" []
+                 :summary "Returns all snippets"
+                 (ok (repository/snippets ds)))
 
-    (GET "/snippets/:id" []
-      :summary "Returns a snippet for an ID"
-      :path-params [id :- s/Int]
-      (ok (repository/snippet ds id))
-      )))
+               (GET "/snippets/:id" []
+                 :summary "Returns a snippet for an ID"
+                 :path-params [id :- s/Int]
+                 (ok (repository/snippet ds id))
+                 ))
+             :access-control-allow-origin [#"http://localhost:3449"]
+             :access-control-allow-methods [:get :put :post :delete]
+             ))
