@@ -1,2 +1,2 @@
-{:up ["CREATE TABLE snippet (    id SERIAL PRIMARY KEY,    title VARCHAR,    content TEXT,    created_date TIMESTAMP WITHOUT TIME ZONE);"]
+{:up ["CREATE TABLE snippet (    id SERIAL PRIMARY KEY,    title VARCHAR,    file_name VARCHAR, content TEXT,    created_date TIMESTAMP WITHOUT TIME ZONE);"]
  :down ["DROP TABLE snippet;"]}
